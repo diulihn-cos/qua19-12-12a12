@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>12a12-19/11</title>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: url('lop12a12.jpg.jpg') no-repeat center center / cover;
+      background-color: #1e293b;
+      overflow: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.35);
+      z-index: 0;
+    }
+
+    .logo-anh {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 20;
+      width: 110px;
+    }
+
+    .logo-anh img {
+      width: 100%;
+      height: auto;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+    }
+
+    .khung-giua {
+      position: relative;
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(12px);
+      padding: 35px 25px;
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      width: 90%;
+      max-width: 360px;
+      text-align: center;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+    }
+
+    .hop-qua {
+      font-size: 70px;
+      margin-bottom: 20px;
+      animation: bounce 2s infinite ease-in-out;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      border: 2px solid rgba(255, 255, 255, 0.7);
+      text-align: center;
+      font-size: 16px;
+      margin-bottom: 14px;
+      outline: none;
+      background: rgba(255, 255, 255, 0.9);
+      color: #333;
+      font-weight: bold;
+    }
+
+    input:focus {
+      border-color: #ff416c;
+    }
+
+    button.nut-mo {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      border: none;
+      background: linear-gradient(135deg, #ff416c, #ff4b2b);
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(255, 65, 108, 0.4);
+      transition: transform 0.2s;
+    }
+
+    button.nut-mo:hover {
+      transform: translateY(-2px);
+    }
+
+    .bao-loi {
+      color: #fff;
+      background: rgba(220, 38, 38, 0.85);
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      margin-top: 12px;
+      display: none;
+    }
+
+    .nen-thiep {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(6px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 50;
+      padding: 20px;
+    }
+
+    .tam-thiep {
+      background: white;
+      width: 100%;
+      max-width: 420px;
+      border-radius: 24px;
+      padding: 30px 24px;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+      animation: phongTo 0.35s ease-out;
+    }
+
+    @keyframes phongTo {
+      from { transform: scale(0.7); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .nhan-1911 {
+      display: inline-block;
+      background: #ffe4e6;
+      color: #ff416c;
+      font-weight: bold;
+      font-size: 13px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+    }
+
+    .ten-ban-nam {
+      font-size: 24px;
+      color: #1e293b;
+      margin-bottom: 15px;
+    }
+
+    .noi-dung-chuc {
+      font-size: 16px;
+      line-height: 1.6;
+      color: #475569;
+      background: #f8fafc;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px dashed #cbd5e1;
+      margin-bottom: 20px;
+    }
+
+    .nut-dong {
+      background: #1e293b;
+      color: white;
+      border: none;
+      padding: 12px 26px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="logo-anh">
+    <img src="12a12.png" alt="Logo 12A12">
+  </div>
+
+  <div class="khung-giua">
+    <div class="hop-qua">🎁</div>
+    <input type="text" id="oNhapMatKhau" placeholder="Nhập ngày sinh (VD: 1508)..." onkeypress="kiemTraEnter(event)">
+    <button class="nut-mo" onclick="moQua()">Mở Quà Ngay ✨</button>
+    <div class="bao-loi" id="dongBaoLoi">Sai ngày sinh rồi, thử lại nha! 😅</div>
+  </div>
+
+  <div class="nen-thiep" id="khungThiep">
+    <div class="tam-thiep">
+      <div class="nhan-1911">CHÚC MỪNG NGÀY 19/11 • 12A12</div>
+      <h2 class="ten-ban-nam" id="hienTen">Tên bạn nam</h2>
+      <p class="noi-dung-chuc" id="hienLoiChuc">Nội dung lời chúc sẽ hiện ở đây...</p>
+      <button class="nut-dong" onclick="dongThiep()">Đóng thiệp</button>
+    </div>
+  </div>
+
+  <script>
+    const danhSachLop = {
+      "1508": {
+        ten: "Nguyễn Văn A (Lớp trưởng)",
+        loiChuc: "Chúc lớp trưởng 19/11 luôn giữ vững phong độ, bớt càm ràm tụi con gái lại và thi đậu nguyện vọng 1 nha!"
+      },
+      "2010": {
+        ten: "Trần Minh B",
+        loiChuc: "Chúc hotboy bàn cuối ngày 19/11 thật nhiều niềm vui, đẹp trai học giỏi và sớm có người yêu nhé!"
+      },
+      "0509": {
+        ten: "Lê Hoàng C",
+        loiChuc: "Cảm ơn cậu vì luôn nhiệt tình giúp đỡ hội chị em 12A12. Chúc cậu 19/11 bùng nổ năng lượng!"
+      }
+    };
+
+    function moQua() {
+      const matKhau = document.getElementById("oNhapMatKhau").value.trim();
+      const thongTin = danhSachLop[matKhau];
+
+      if (thongTin) {
+        document.getElementById("dongBaoLoi").style.display = "none";
+        document.getElementById("hienTen").innerText = thongTin.ten;
+        document.getElementById("hienLoiChuc").innerText = thongTin.loiChuc;
+        document.getElementById("khungThiep").style.display = "flex";
+        
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 }
+        });
+      } else {
+        document.getElementById("dongBaoLoi").style.display = "block";
+      }
+    }
+
+    function kiemTraEnter(event) {
+      if (event.key === "Enter") {
+        moQua();
+      }
+    }
+
+    function dongThiep() {
+      document.getElementById("khungThiep").style.display = "none";
+      document.getElementById("oNhapMatKhau").value = "";
+    }
+  </script>
+
+</body>
+</html>
